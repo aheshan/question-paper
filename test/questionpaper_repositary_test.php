@@ -15,4 +15,10 @@ class QuestionPaperRepositaryTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals($prevCount+1,$newCount);
 	}
+	public function test_it_should_return_questionpaper()
+	{
+		$qPaperRepo = new QuestionPaperRepository();
+		$prevCount = $qPaperRepo->findById(1);
+		$this->assertEquals($prevCount["questionPaperId"],1);	
+	}
 }

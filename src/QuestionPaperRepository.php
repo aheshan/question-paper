@@ -12,14 +12,16 @@ class QuestionPaperRepository
 	}
 	private function loadQuestionPaper()
 	{
-		array_push($this->questionPapers, array("id" => 1,"title" => "Mathematics",
-			"created_at" => "2015-03-29 11:00:45 AM",
-			"updated_at" => "2015-03-29 11:00:45 AM",
+		array_push($this->questionPapers, array("questionPaperId" => 1,
+			"questionPaperTitle" => "Mathematics",
+			"dateCreated" => "2015-03-29 11:00:45 AM",
+			"dateUpdated" => "2015-03-29 11:00:45 AM",
 			"questions" => array()));
 
-		array_push($this->questionPapers, array("id" => 2,"title" => "Science",
-			"created_at"=>"2015-03-29 11:00:45 AM",
-			 "updated_at"=>"2015-03-29 11:00:45 AM",
+		array_push($this->questionPapers, array("questionPaperId" => 2,
+			"questionPaperTitle" => "Science",
+			"dateCreated"=>"2015-03-29 11:00:45 AM",
+			 "dateUpdated"=>"2015-03-29 11:00:45 AM",
 			 "questions" => array()));
 	}
 	
@@ -31,25 +33,32 @@ class QuestionPaperRepository
 	public function create(QuestionPaper $questionPaper)
 	{
 		array_push($this->questionPapers, array(
-			"id" => $questionPaper->getQuestionPaperId(),
-			"title" => $questionPaper->getQuestionPaperTitle(),
-			"created_at" => $questionPaper->getDateCreated(), 
-			"updated_at" => $questionPaper->getDateUpdated(),
-			"questions" => $questionPaper->getAllQuestions()));
+			"questionPaperId"    => $questionPaper->getQuestionPaperId(),
+			"questionPaperTitle" => $questionPaper->getQuestionPaperTitle(),
+			"dateCreated"        => $questionPaper->getDateCreated(), 
+			"dateUpdated"        => $questionPaper->getDateUpdated(),
+			"questions"          => $questionPaper->getAllQuestions()));
 	}
 
 	public function findById($questionPaperId)
 	{
-		//TODO: to be defined
+		foreach ($this->questionPapers as $questionPaper) {
+			if($questionPaper["questionPaperId"] == $questionPaperId){
+    			return $questionPaper;
+    		}
+		}
+		throw new Exception("No Questionpaper found");
 	}
 
 	public function getQuestionsByQuestionpaperId($questionPaperId)
 	{
-		//TODO: to be defined
+		$questionPaper = $this->findById($questionPaperId);
+		return $questionPaper["questions"];
 	}
 
-	public function createQuestion($questionPaperId,Question $question)
+	public function createQuestionForQuestionPaper($questionPaperId,Question $question)
 	{
-		//TODO: to be defined
+		$questionPaper = $this->findById($questionPaperId);
+		array_push($questionPaper["questions"],$question);
 	}
 }

@@ -12,22 +12,10 @@ class QuestionPaperService
 	public function getAllQuestionPapers()
 	{
 		$questionPapers = $this->questionPaperRepository->getAllQuestionPaper();
-		$papers  = []; 
+		
 		if(!empty($questionPapers)){
-			foreach ($questionpapers as $questionpaper) {
-				QuestionPaper $qPaper = new QuestionPaper($questionpaper->title);
-				$qPaper->setQuestionPaperId($questionpaper->id);
-				$qPaper->setDateCreated($questionpaper->created_at);
-				$qPaper->setDateUpdated($questionpaper->updated_at);
-
-				foreach ($questionpaper->questions as $question) {
-                    $qPaper->writeNewQuestion($question->title);	
-				}
-
-				$papers[] = $qPaper;
-			}
-
-			return $papers;
+			
+			return $questionPapers;
 		}
 
 		throw new Exception("There is no question paper in the system.");
@@ -38,5 +26,14 @@ class QuestionPaperService
 		$questionPaper = new QuestionPaper($questionPaperTitle);
 
 		$this->questionPaperRepository->create($questionPaper);
+	}
+
+	public function writeQustionInQuestionPaper(QuestionPaper $questionPaper,
+		$questionTitle)
+	{
+		$quetion = $questionPaper->writeNewQuestion($questionTitle);
+		
+		$this->questionPaperRepository->createQuestionForQuestionPaper
+		($questionPaper->getQuestionPaperId(),$question);
 	}
 }

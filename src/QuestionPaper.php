@@ -116,14 +116,6 @@ class QuestionPaper
     /**
     * @var DateTime
     */
-    public function setDateCreated($dateCreated)
-    {
-        return $this->dateCreated = $dateCreated;
-    }
-
-    /**
-    * @var DateTime
-    */
     public function setDateUpdated($dateUpdated)
     {
         return $this->dateUpdated = $dateUpdated;
