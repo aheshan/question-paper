@@ -4,61 +4,39 @@ use src\QuestionPaper;
 
 class QuestionPaperRepository
 {
-	private $questionPapers = array();
-
-	public function __construct()
+	private $entityManager;
+	
+	public function __construct($entityManager)
 	{
-		$this->loadQuestionPaper();
-	}
-	private function loadQuestionPaper()
-	{
-		array_push($this->questionPapers, array("questionPaperId" => 1,
-			"questionPaperTitle" => "Mathematics",
-			"dateCreated" => "2015-03-29 11:00:45 AM",
-			"dateUpdated" => "2015-03-29 11:00:45 AM",
-			"questions" => array()));
-
-		array_push($this->questionPapers, array("questionPaperId" => 2,
-			"questionPaperTitle" => "Science",
-			"dateCreated"=>"2015-03-29 11:00:45 AM",
-			 "dateUpdated"=>"2015-03-29 11:00:45 AM",
-			 "questions" => array()));
+		$this->entityManager = $entityManager;
 	}
 	
 	public function getAllQuestionPaper()
 	{
-		return $this->questionPapers;
+		$dql = "select q from src\QuestionPaper q";
+		return $this->entityManager->createQuery($dql)
+								   ->getResult();
 	}
 
 	public function create(QuestionPaper $questionPaper)
 	{
-		array_push($this->questionPapers, array(
-			"questionPaperId"    => $questionPaper->getQuestionPaperId(),
-			"questionPaperTitle" => $questionPaper->getQuestionPaperTitle(),
-			"dateCreated"        => $questionPaper->getDateCreated(), 
-			"dateUpdated"        => $questionPaper->getDateUpdated(),
-			"questions"          => $questionPaper->getAllQuestions()));
+		
+		$this->entityManager->persist($questionPaper);
+		$this->entityManager->flush();
 	}
 
 	public function findById($questionPaperId)
 	{
-		foreach ($this->questionPapers as $questionPaper) {
-			if($questionPaper["questionPaperId"] == $questionPaperId){
-    			return $questionPaper;
-    		}
-		}
+		$questionPaper = $this->entityManager->find("src\QuestionPaper", (int)$questionPaperId);
+		if(!is_null($questionPaper))
+			return $questionPaper;
 		throw new Exception("No Questionpaper found");
 	}
 
-	public function getQuestionsByQuestionpaperId($questionPaperId)
-	{
-		$questionPaper = $this->findById($questionPaperId);
-		return $questionPaper["questions"];
-	}
 
-	public function createQuestionForQuestionPaper($questionPaperId,Question $question)
-	{
-		$questionPaper = $this->findById($questionPaperId);
-		array_push($questionPaper["questions"],$question);
+	public function createQuestionForQuestionPaper(Question $question)
+	{	
+		$this->entityManager->persist($question);
+		$this->entityManager->flush();
 	}
 }

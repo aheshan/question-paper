@@ -24,16 +24,24 @@ class QuestionPaperService
 	public function createNewQuestionPaper($questionPaperTitle)
 	{
 		$questionPaper = new QuestionPaper($questionPaperTitle);
-
+		$questionPaper->setDateUpdated(new \DateTime("now"));
 		$this->questionPaperRepository->create($questionPaper);
+	}
+
+
+	public function getQuestionPaperById($questionPaper)
+	{
+		return $this->questionPaperRepository->findById($questionPaper);
 	}
 
 	public function writeQustionInQuestionPaper(QuestionPaper $questionPaper,
 		$questionTitle)
 	{
-		$quetion = $questionPaper->writeNewQuestion($questionTitle);
+		$question = $questionPaper->writeNewQuestion($questionTitle);
 		
 		$this->questionPaperRepository->createQuestionForQuestionPaper
-		($questionPaper->getQuestionPaperId(),$question);
+		($question);
+		
+		
 	}
 }
